@@ -28,10 +28,8 @@ import os
 # important!
 tone = 2
 semitone = 1
-prompt = ":> "
-arrow = ' -> '
 
-# TODO convert to dictionaries
+# use tuples instead of lists?  for example prices = (29.95, 9.98, 4.95, 79.98, 2.95)
 notes_num = [0,1,2,3,4,5,6,7,8,9,10,11] 
 notes_sym = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 
@@ -47,7 +45,7 @@ mixolydian = [tone, tone, semitone, tone, tone, semitone, tone]
 aeolian = [tone, semitone, tone, tone, semitone, tone, tone]
 locrian = [semitone, tone, tone, semitone, tone, tone, tone]
 
-# Major modes 
+# Major modes staff
 major_modes_num = [0,1,2,3,4,5,6]
 major_modes_sym = [ionian, dorian, phrygian, lydian, mixolydian, aeolian, locrian]
 major_modes_str = ['ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian']
@@ -207,25 +205,40 @@ def random_melody(notes,num,key):
 def savefile(final):
     # extract notes to .txt
     # for sonic-pi use
-    
-    header = "Do you want to save the notes in a txt file?"
-    ans = check_yes_no(header)
-    if ans == True:
-        filename = input("Enter new file name <name>, we'll add the .txt at the end) : ")
-        with open(filename, "wt") as f:
+    while True:
+        ans = input("Do you want to save the notes in a txt file? (yes/no): ")
+        if ans == "yes":
+            filename = input("Enter new file name (<name>.txt) : ")
+            f = open(filename, "wt")
             f.write("# %s\n" % final)
-            
-        print("%s saved succesfully!" % filename)
-        
-        
-    else:
-        print("Program termination.")
-        
+            f.write("4.times do\n")
+            # drum beat at first beat
+            f.write("sample :drum_bass_hard\n")
+            for item in final:
+                # random drum beats
+                n = random.randint(0,1)
+                if n == 0:  
+                    f.write("sample :drum_bass_hard\n")
+                f.write("play ")
+                note = notes_num[notes_sym.index(item)]
+                f.write("%d" % midi_notes[note])
+                f.write("\n")
+                f.write("sleep 0.2\n") #value
+            f.write("end")
+            f.close()
+            print("%s saved succesfully!" % filename)
+
+            break
+        elif ans == "no":
+            print("Program termination.")
+            break
+        else:
+            print("Invalid input!")
 
 # what to display
 def show(count,key,path,minor,mode):
     os.system('clear')
-    
+    arrow = ' -> '
     count = count + 1
     if count == 1:
         print(key+arrow)
@@ -249,7 +262,7 @@ def user_input():
     while True:
 
         os.system('clear')
-        key = input("Choose key\n%s: " % notes_sym)
+        key = input("Choose key : ")
         key = key.upper()
         if key == "RANDOM":
             n = random.randint(0,11)
@@ -264,7 +277,9 @@ def user_input():
 
         elif key in notes_sym:
             break
-        
+        else:
+            print("Wrong input!")
+            print('The notes are : %s' % notes_sym)
 
     count = show(count,key,path=' ',minor=' ',mode= ' ')
 
@@ -429,18 +444,20 @@ def user_input():
 def check_yes_no(string):
 
     while True:
-        answer = input("%s\n[y/n]: " % string)
-        answer = answer.lower()
-        if answer != 'yes' and answer != 'y' and answer != 'no' and answer != 'n':
-            print('Please enter y or n')
+        proceed = input("%s\n(yes/no): " % string)
+        proceed = proceed.lower()
+        if proceed != 'yes' and proceed != 'y' and proceed != 'no' and proceed != 'n':
+            print('Please enter yes/no')
             continue
-        elif 'yes' in answer or answer == 'y':
+        elif 'yes' in proceed or proceed == 'y':
             return True
-        elif 'no' in answer or answer == 'n':
+        elif 'no' in proceed or proceed == 'n':
             return False
 
 # random all
 def random_all():
+
+    arrow = ' -> '
 
     n = random.randint(0,11)
     key = notes_sym[n]
@@ -463,13 +480,13 @@ def random_all():
             n = random.randint(0,6)
             mode = natural_minor_modes_str[n]
 
+        
     else:
         path = "major" 
         minor = ' '
         n = random.randint(0,6)
         mode = major_modes_str[n]
 
-    # number of notes
     num = 8 # random.randint(4,32)
     if path != 'minor':
         print(key+arrow+path.capitalize()+arrow+mode.capitalize())
@@ -480,16 +497,6 @@ def random_all():
     return key,path,minor,mode,num
     
 
-def list_options(options: list):
-    str = ''
-    str += "\nAvailable options:\n"
-    for opt in options:
-        str += '\n'
-        str += '['
-        str += '{0}'.format(options.index(opt) + 1) 
-        str += ']'
-        str += opt
-    return str
     
 
         
@@ -498,98 +505,98 @@ def list_options(options: list):
 ##################################################################################################################################
 
 
-def main():
+
+os.system('clear')
+
+#functions = [simple_melody,repeated_melody,]
+while True:
+    print("\u0332".join("Available functions:"))
+    print("\n(1) simple melody \n(2) random melody repeated over a chord progression")
+    function = int(input('\nEnter number of function: ')) 
+    if function == 1 or function == 2:
+        break
+    else:
+        os.system('clear')
+
+text1 = 'Simple Melody Mode'
+text2 = 'Chord Progression Mode'
+
+if function == 1:
     os.system('clear')
+    print("\u0332".join(text1))
+    string = '\nDo you want a completely random melody?'
+    p = check_yes_no(string)
+    if p is True:
+        key, path, minor, mode, num = random_all()
+    else:
+        key, path, minor, mode, num = user_input()
 
-    header = "\u0332".join("Note Generator\n")
-    options = ["Simple Melody", "Melody over Chord Progression"]
-    choices = "\n[1] {0} \n[2] {1}".format(options[0], options[1])
-    accepted = [1,2]
+    notes = pool(key,path,minor,mode)
+    final = random_melody(notes,num,key)
+    print(final)
+    savefile(final)
+else:
+    os.system('clear')
     while True:
-        print(header,list_options(options))
-        option = int(input("\nEnter number of option[] " + prompt))
-        if option in accepted:
-            break
-        else:
-            os.system('clear')
-
-    if option == 1:
-        os.system('clear')
-        print("\u0332".join(options[0]))
-        header = '\nDo you want a completely random melody?'
-        p = check_yes_no(header)
-        if p is True:
-            key, path, minor, mode, num = random_all()
-        else:
-            key, path, minor, mode, num = user_input()
-
-        notes = pool(key,path,minor,mode)
-        final = random_melody(notes,num,key)
-        print(final)
-        savefile(final)
-    elif option == 2:
-        os.system('clear')
-        while True:
-            print("\u0332".join(options[1]))
-            chord_progression = input("\nEnter chord progression: ")
-            chord_progression = chord_progression.lower()
-            chord_progression = chord_progression.split()
-            flag = True
-            for i in chord_progression:
-                if i not in chords:
-                    os.system('clear')
-                    print('Invalid input!\n')
-                    #os.system('clear')
-                    flag = False
-                    break
-            if flag == False:
-                continue
-            else:
-                break
-        combined = []
+        print("\u0332".join(text2))
+        chord_progression = input("\nEnter chord progression: ")
+        chord_progression = chord_progression.lower()
+        chord_progression = chord_progression.split()
+        flag = True
         for i in chord_progression:
-            if i in major_chords:
-                n = random.randint(1,2)
-                if n == 1:
-                    mode = 'ionian'
+            if i not in chords:
+                os.system('clear')
+                print('Invalid input!\n')
+                #os.system('clear')
+                flag = False
+                break
+        if flag == False:
+            continue
+        else:
+            break
+    combined = []
+    for i in chord_progression:
+        if i in major_chords:
+            n = random.randint(1,2)
+            if n == 1:
+                mode = 'ionian'
+            else:
+                mode = 'lydian'
+            notes = pool(i[0].upper(),'major',' ',mode)
+            while True:
+                num = input("Number of notes for %s: " % i)
+                num = num.lower()
+                if num == "random":
+                    num = random.randint(4,32)
+                    print(num)
+                    break
+                elif num.isdigit() == False:
+                    print('Invalid input')
                 else:
-                    mode = 'lydian'
-                notes = pool(i[0].upper(),'major',' ',mode)
-                while True:
-                    num = input("Number of notes for %s: " % i)
-                    num = num.lower()
-                    if num == "random":
-                        num = random.randint(4,32)
-                        print(num)
-                        break
-                    elif num.isdigit() == False:
-                        print('Invalid input')
+                    num = int(num)
+                    if num < 4 or num > 32:
+                        print("You can ask for 4-32 notes")
                     else:
-                        num = int(num)
-                        if num < 4 or num > 32:
-                            print("You can ask for 4-32 notes")
-                        else:
-                            break
-                final = random_melody(notes,num,i[0])
-                combined.append(final)
-                #print(final)
-            elif i in minor_chords:
-                pass
-            elif i in dominant_7th_chords:
-                pass
-            elif i in major7_chords:
-                pass
-            elif i in minor7_chords:
-                pass
-        print(combined)
-            
+                        break
+            final = random_melody(notes,num,i[0])
+            combined.append(final)
+            #print(final)
+        elif i in minor_chords:
+            pass
+        elif i in dominant_7th_chords:
+            pass
+        elif i in major7_chords:
+            pass
+        elif i in minor7_chords:
+            pass
+    print(combined)
+        
 
-main()
+            
 
 
 
     
-
 
 
 
