@@ -36,6 +36,10 @@ describe('stable identity', () => {
     const cyclic: { self?: unknown } = {}
     cyclic.self = cyclic
     expect(() => stableStringify(cyclic)).toThrow(TypeError)
+
+    const sparse = Array<unknown>(1)
+    expect(() => stableStringify(sparse)).toThrow(/arrays must be dense/u)
+    expect(stableStringify([])).toBe('[]')
     expect(() => stableId('Not Valid', {})).toThrow(TypeError)
   })
 })

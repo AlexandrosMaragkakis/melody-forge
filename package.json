@@ -15,7 +15,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "npm run build && playwright test",
-    "check": "npm run typecheck && npm run lint && npm run test && npm run build"
+    "traceability:check": "node scripts/check-v2-traceability.mjs",
+    "status:sync": "node scripts/sync-v2-status.mjs",
+    "check": "npm run typecheck && npm run lint && npm run test && npm run build && npm run traceability:check"
   },
   "dependencies": {
     "react": "19.2.8",

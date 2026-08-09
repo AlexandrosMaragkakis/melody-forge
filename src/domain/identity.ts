@@ -40,7 +40,14 @@ function serialize(value: unknown, ancestors: Set<object>): string {
   ancestors.add(value)
   try {
     if (Array.isArray(value)) {
-      return `[${value.map((item) => serialize(item, ancestors)).join(',')}]`
+      const items: string[] = []
+      for (let index = 0; index < value.length; index += 1) {
+        if (!Object.prototype.hasOwnProperty.call(value, index)) {
+          throw new TypeError('Identity data arrays must be dense')
+        }
+        items.push(serialize(value[index], ancestors))
+      }
+      return `[${items.join(',')}]`
     }
 
     const prototype = Reflect.getPrototypeOf(value)

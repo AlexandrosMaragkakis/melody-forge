@@ -1,0 +1,246 @@
+{
+  "kind": "melody-forge-project",
+  "schemaVersion": 1,
+  "project": {
+    "mode": "modern",
+    "legacySettings": {
+      "tonicPitchClass": 11,
+      "scaleId": "diatonic-ionian",
+      "noteCount": 5,
+      "tempoBpm": 93,
+      "populationSize": 2,
+      "seed": "v1-golden-legacy-five"
+    },
+    "modernSettings": {
+      "tonicPitchClass": 0,
+      "scaleId": "diatonic-ionian",
+      "registerLowOctave": 4,
+      "registerHighOctave": 6,
+      "noteCount": 10,
+      "phraseBeats": 5,
+      "tempoBpm": 117,
+      "gridTicks": 240,
+      "allowRests": true,
+      "maxLeap": 4,
+      "tonicClosure": true,
+      "populationSize": 4,
+      "seed": "v1-golden-five-beats"
+    },
+    "evolutionSettings": {
+      "populationSize": 4,
+      "mutationStrength": 0.28,
+      "retainElites": true
+    },
+    "history": [],
+    "historyIndex": -1,
+    "favorites": [
+      {
+        "id": "legacy-14d4a7dce6581503",
+        "melody": {
+          "constraints": {
+            "scaleId": "diatonic-ionian",
+            "tonicPitchClass": 11,
+            "tonicMidi": 71,
+            "register": {
+              "minMidi": 60,
+              "maxMidi": 71
+            },
+            "pitchMapping": "legacy-fixed-octave",
+            "ticksPerBeat": 480,
+            "gridTicks": 480,
+            "totalTicks": 2400,
+            "tempoBpm": 93,
+            "tonicBoundary": {
+              "start": true,
+              "end": true
+            }
+          },
+          "events": [
+            {
+              "startTick": 0,
+              "durationTicks": 480,
+              "degree": 0
+            },
+            {
+              "startTick": 480,
+              "durationTicks": 480,
+              "degree": -4
+            },
+            {
+              "startTick": 960,
+              "durationTicks": 480,
+              "degree": -6
+            },
+            {
+              "startTick": 1440,
+              "durationTicks": 480,
+              "degree": -2
+            },
+            {
+              "startTick": 1920,
+              "durationTicks": 480,
+              "degree": 0
+            }
+          ]
+        },
+        "provenance": {
+          "strategy": "legacy",
+          "generatorVersion": "legacy-simple-v1",
+          "seed": "v1-golden-legacy-five",
+          "settings": {
+            "tonicPitchClass": 11,
+            "scaleId": "diatonic-ionian",
+            "noteCount": 5,
+            "tempoBpm": 93,
+            "populationSize": 2,
+            "populationIndex": 0,
+            "ticksPerNote": 480
+          },
+          "generation": 0,
+          "parentIds": [],
+          "operations": [
+            {
+              "operator": "independent-uniform-scale-degree",
+              "parameters": {
+                "scaleCardinality": 7,
+                "sampledInternalNotes": 3
+              }
+            },
+            {
+              "operator": "force-tonic-boundaries",
+              "parameters": {
+                "start": true,
+                "end": true
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "evolved-84da177b30089c00",
+        "melody": {
+          "constraints": {
+            "scaleId": "diatonic-ionian",
+            "tonicPitchClass": 0,
+            "tonicMidi": 72,
+            "register": {
+              "minMidi": 60,
+              "maxMidi": 84
+            },
+            "pitchMapping": "tonic-relative",
+            "ticksPerBeat": 480,
+            "gridTicks": 240,
+            "totalTicks": 2400,
+            "tempoBpm": 117,
+            "tonicBoundary": {
+              "start": true,
+              "end": true
+            }
+          },
+          "events": [
+            {
+              "startTick": 0,
+              "durationTicks": 240,
+              "degree": 0
+            },
+            {
+              "startTick": 240,
+              "durationTicks": 240,
+              "degree": -4
+            },
+            {
+              "startTick": 480,
+              "durationTicks": 240,
+              "degree": -5
+            },
+            {
+              "startTick": 720,
+              "durationTicks": 240,
+              "degree": -6
+            },
+            {
+              "startTick": 960,
+              "durationTicks": 240,
+              "degree": -4
+            },
+            {
+              "startTick": 1200,
+              "durationTicks": 240,
+              "degree": -6
+            },
+            {
+              "startTick": 1440,
+              "durationTicks": 240,
+              "degree": null
+            },
+            {
+              "startTick": 1680,
+              "durationTicks": 240,
+              "degree": -7
+            },
+            {
+              "startTick": 1920,
+              "durationTicks": 240,
+              "degree": -3
+            },
+            {
+              "startTick": 2160,
+              "durationTicks": 240,
+              "degree": 0
+            }
+          ]
+        },
+        "provenance": {
+          "strategy": "evolution",
+          "generatorVersion": "interactive-evolution-v1",
+          "seed": "{\"generation\":1,\"generatorVersion\":\"interactive-evolution-v1\",\"maxAttemptsPerSlot\":6,\"mutationStrength\":0.28,\"parentIds\":[\"candidate-2e3dbf51cb754063\",\"candidate-e7a7faaf8d22eb7e\"],\"populationSize\":4,\"retainElites\":true,\"rngVersion\":\"sfc32-v1\",\"seed\":\"v1-golden-five-beats::evolution-1\"}::offspring-2-attempt-4",
+          "settings": {
+            "mutationStrength": 0.28,
+            "populationSize": 4,
+            "retainElites": true,
+            "offspringIndex": 2,
+            "attemptIndex": 4,
+            "crossover": "auto",
+            "populationSeed": "v1-golden-five-beats::evolution-1",
+            "maxAttemptsPerSlot": 6,
+            "rngVersion": "sfc32-v1"
+          },
+          "generation": 1,
+          "parentIds": [
+            "candidate-2e3dbf51cb754063",
+            "candidate-e7a7faaf8d22eb7e"
+          ],
+          "operations": [
+            {
+              "operator": "contour-rhythm-crossover",
+              "parameters": {
+                "applied": true,
+                "pitchParentId": "candidate-e7a7faaf8d22eb7e",
+                "rhythmParentId": "candidate-2e3dbf51cb754063",
+                "eventCount": 10
+              }
+            },
+            {
+              "operator": "motif-transpose",
+              "parameters": {
+                "applied": true,
+                "start": 1,
+                "length": 4,
+                "requestedDelta": -2
+              }
+            },
+            {
+              "operator": "motif-reverse",
+              "parameters": {
+                "applied": true,
+                "start": 4,
+                "length": 4
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "loop": true
+  }
+}

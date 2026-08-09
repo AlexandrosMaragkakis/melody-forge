@@ -1,0 +1,121 @@
+{
+  "kind": "melody-forge-candidate",
+  "schemaVersion": 1,
+  "candidate": {
+    "id": "candidate-2e3dbf51cb754063",
+    "melody": {
+      "events": [
+        {
+          "startTick": 0,
+          "durationTicks": 240,
+          "degree": 0
+        },
+        {
+          "startTick": 240,
+          "durationTicks": 240,
+          "degree": 2
+        },
+        {
+          "startTick": 480,
+          "durationTicks": 240,
+          "degree": 3
+        },
+        {
+          "startTick": 720,
+          "durationTicks": 240,
+          "degree": 4
+        },
+        {
+          "startTick": 960,
+          "durationTicks": 240,
+          "degree": 3
+        },
+        {
+          "startTick": 1200,
+          "durationTicks": 240,
+          "degree": null
+        },
+        {
+          "startTick": 1440,
+          "durationTicks": 240,
+          "degree": 2
+        },
+        {
+          "startTick": 1680,
+          "durationTicks": 240,
+          "degree": 1
+        },
+        {
+          "startTick": 1920,
+          "durationTicks": 240,
+          "degree": 2
+        },
+        {
+          "startTick": 2160,
+          "durationTicks": 240,
+          "degree": 0
+        }
+      ],
+      "constraints": {
+        "scaleId": "diatonic-ionian",
+        "tonicPitchClass": 0,
+        "tonicMidi": 72,
+        "register": {
+          "minMidi": 60,
+          "maxMidi": 84
+        },
+        "pitchMapping": "tonic-relative",
+        "ticksPerBeat": 480,
+        "gridTicks": 240,
+        "totalTicks": 2400,
+        "tempoBpm": 117,
+        "tonicBoundary": {
+          "start": true,
+          "end": true
+        }
+      }
+    },
+    "provenance": {
+      "strategy": "modern",
+      "generatorVersion": "modern-constrained-v1",
+      "seed": "v1-golden-five-beats::modern-0",
+      "settings": {
+        "tonicPitchClass": 0,
+        "scaleId": "diatonic-ionian",
+        "registerLowOctave": 4,
+        "registerHighOctave": 6,
+        "noteCount": 10,
+        "phraseBeats": 5,
+        "tempoBpm": 117,
+        "gridTicks": 240,
+        "allowRests": true,
+        "maxLeap": 4,
+        "tonicClosure": true
+      },
+      "generation": 0,
+      "parentIds": [],
+      "operations": [
+        {
+          "operator": "weighted-contour",
+          "parameters": {
+            "maxLeap": 4,
+            "motifWindow": 3
+          }
+        },
+        {
+          "operator": "balanced-grid-rhythm",
+          "parameters": {
+            "gridTicks": 240,
+            "totalTicks": 2400
+          }
+        },
+        {
+          "operator": "sparse-rests",
+          "parameters": {
+            "probability": 0.12
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,12 +1,6 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
-test.beforeEach(async ({ page }) => {
-  await page.goto('/')
-  await page.evaluate(() => localStorage.clear())
-  await page.reload()
-})
-
 test('complete local creative loop remains usable and clean', async ({
   page,
 }, testInfo) => {
@@ -17,6 +11,10 @@ test('complete local creative loop remains usable and clean', async ({
     }
   })
   page.on('pageerror', (error) => consoleProblems.push(`pageerror: ${error.message}`))
+
+  await page.goto('/')
+  await page.evaluate(() => localStorage.clear())
+  await page.reload()
 
   await expect(page.getByRole('heading', { name: 'Melody Forge' })).toBeVisible()
   await page.getByRole('button', { name: 'Generate population' }).click()
@@ -117,7 +115,7 @@ test('complete local creative loop remains usable and clean', async ({
   ).toEqual([])
 
   await page.screenshot({
-    path: `screenshots/${testInfo.project.name}-workflow.png`,
+    path: testInfo.outputPath('creative-loop-current.png'),
     fullPage: true,
   })
 

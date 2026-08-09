@@ -1,0 +1,86 @@
+{
+  "kind": "melody-forge-candidate",
+  "schemaVersion": 1,
+  "candidate": {
+    "id": "legacy-14d4a7dce6581503",
+    "melody": {
+      "events": [
+        {
+          "startTick": 0,
+          "durationTicks": 480,
+          "degree": 0
+        },
+        {
+          "startTick": 480,
+          "durationTicks": 480,
+          "degree": -4
+        },
+        {
+          "startTick": 960,
+          "durationTicks": 480,
+          "degree": -6
+        },
+        {
+          "startTick": 1440,
+          "durationTicks": 480,
+          "degree": -2
+        },
+        {
+          "startTick": 1920,
+          "durationTicks": 480,
+          "degree": 0
+        }
+      ],
+      "constraints": {
+        "scaleId": "diatonic-ionian",
+        "tonicPitchClass": 11,
+        "tonicMidi": 71,
+        "register": {
+          "minMidi": 60,
+          "maxMidi": 71
+        },
+        "pitchMapping": "legacy-fixed-octave",
+        "ticksPerBeat": 480,
+        "gridTicks": 480,
+        "totalTicks": 2400,
+        "tempoBpm": 93,
+        "tonicBoundary": {
+          "start": true,
+          "end": true
+        }
+      }
+    },
+    "provenance": {
+      "strategy": "legacy",
+      "generatorVersion": "legacy-simple-v1",
+      "seed": "v1-golden-legacy-five",
+      "settings": {
+        "tonicPitchClass": 11,
+        "scaleId": "diatonic-ionian",
+        "noteCount": 5,
+        "tempoBpm": 93,
+        "populationSize": 2,
+        "populationIndex": 0,
+        "ticksPerNote": 480
+      },
+      "generation": 0,
+      "parentIds": [],
+      "operations": [
+        {
+          "operator": "independent-uniform-scale-degree",
+          "parameters": {
+            "scaleCardinality": 7,
+            "sampledInternalNotes": 3
+          }
+        },
+        {
+          "operator": "force-tonic-boundaries",
+          "parameters": {
+            "start": true,
+            "end": true
+          }
+        }
+      ]
+    }
+  }
+}
