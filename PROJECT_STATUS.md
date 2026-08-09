@@ -3,16 +3,16 @@
 ## Melody Forge V2 goal
 
 - Overall: in progress
-- Active milestone: V2 M1 — archaeology, fixtures, specifications, traceability,
-  and migration design
-- Last updated: 2026-08-09 (V1 baseline/edge fixtures, normative V2 specs, and
-  691-ID locked traceability are complete; the independent M1 integration
-  audit is clear and only the scoped checkpoint remains; pure transport
-  foundation is in progress)
+- Active milestone: V2 M2 — schema-2 entities, exact V1 migration, and native
+  IndexedDB persistence
+- Last updated: 2026-08-09 (M1 is checkpointed at
+  `c5e0422c9e3e1190aa0b17299245c46e9c45c51b`; the reviewed V1 baseline,
+  normative V2 specs, 691-ID traceability, SeedTree, and transport foundation
+  are preserved while schema-2 implementation begins)
 - Preservation rule: never change anything under `legacy/`; the authoritative
   baseline remains `docs/LEGACY_SHA256.txt`.
-- Immediate next action: create/record the scoped M1 checkpoint, then resume M2 at schema-v2
-  entities, exact V1 migration, and the async IndexedDB adapter.
+- Immediate next action: implement the exact schema-2 entity/codec kernel and
+  pure V1 conversion/equivalence layer, then add the native IndexedDB adapter.
 
 Status vocabulary: `not started`, `in progress`, `done`, `blocked`.
 
@@ -29,7 +29,7 @@ Status vocabulary: `not started`, `in progress`, `done`, `blocked`.
 | V2-M1-007 | done | Product, UI, Architecture, and ADR 0002 resolve both independent spec audits: canonical transport/grid/swing/caps, all-V1 compatibility, exact descriptors/algorithms/ties, Pair Lab, Map/Pareto/Islands, MIDI/import bounds, IndexedDB authority, accessibility states, and deterministic verification are normative and cross-aligned. The final independent integration audit found no unresolved M1 blocker. |
 | V2-M1-008 | done | `docs/V2_REQUIREMENTS.md`, `docs/V2_IMPLEMENTATION_PLAN.md`, and `docs/V2_REQUIREMENT_IDS.txt` contain 691 locked stable leaf IDs across 11 dependency-ordered milestones; the reviewed raw manifest SHA-256 is `070231a703bb246f5d8b531e2594bc8a44fa7c298eb6d4fbf6166a4a0538a79f`. The strengthened checker validates exact requirements/plan/manifest milestone and row order, nonempty reconstructed fields, statuses/checkboxes, one marker pair, root-correct links, and byte-exact generated status; isolated sync/check, coordinated-deletion, and cross-milestone row-move negative mutations pass. |
 | V2-M1-009 | not started | Add direct schema-v1-to-v2 golden migration tests and browser storage migration evidence after the V2 domain/schema representation is implemented. |
-| V2-M1-010 | in progress | Current integrated `npm run check` passes typecheck, lint, 23 files/199 tests, production build (978 modules), and 691-ID exact traceability in 27.50 s; final `npm run test:e2e` passes all 4 listener-first V1 desktop/mobile workflows in 25.08 s. Independent integration and final preservation/diff audits are clear; only the scoped checkpoint remains. |
+| V2-M1-010 | done | Integrated `npm run check` passed typecheck, lint, 23 files/199 tests, production build (978 modules), and 691-ID exact traceability in 27.50 s; final `npm run test:e2e` passed all 4 listener-first V1 desktop/mobile workflows in 25.08 s. Independent integration/preservation/diff audits cleared and checkpoint `c5e0422c9e3e1190aa0b17299245c46e9c45c51b` records the exact M1 foundation. |
 
 ### V2 M2 execution ledger
 
@@ -37,7 +37,7 @@ Status vocabulary: `not started`, `in progress`, `done`, `blocked`.
 | --- | --- | --- |
 | V2-M2-001 | done | `src/domain/seedTree.ts` adds runtime-frozen, versioned labelled streams for every required creative concern; six deterministic tests lock the multi-segment seed/RNG golden vector, trimming, stream isolation, collision resistance, required labels, input rejection, and runtime immutability. Focused tests, typecheck, and lint pass. |
 | V2-M2-002 | in progress | Pure `src/domain/transport/` now owns versioned/content-addressed 480-PPQ transport data, canonical comparison grid, meter/group/partial-bar math, exact rational swing/inverse, loop/time boundaries, structured pre-hash validation/resource caps, and 1,000 reproducible property cases. Candidate-specific V1 profiles preserve any valid source timing and immutable rational previews report source/result grids, rounding/collapse, and canonical tempo/length/grid impossibility. Focused transport suite passes 5 files / 35 tests; controller/UI/export integration remains. |
-| V2-M2-003 | not started | Implement schema-v2 domain entities, V1 equivalence migration, and versioned async persistence after the M1 documents and transport foundation pass review. |
+| V2-M2-003 | in progress | Implement the reviewed schema-2 entity/codec kernel, pure V1 equivalence migration, and versioned async persistence from checkpoint `c5e0422c9e3e1190aa0b17299245c46e9c45c51b`. |
 
 ## V1 completion archive
 
