@@ -2799,9 +2799,10 @@ Initial V2 decisions:
 - Put any MIDI parser behind MidiFileReader; parser-specific track/note objects
   never enter the domain.
 - Implement M2 IndexedDB with the browser's native API through
-  VersionedProjectStore; no new persistence dependency is required. If measured
-  complexity later justifies one, ADR 0003 must preserve the same store,
-  transaction, codec, and adapter contracts and keep its types inside the
+  VersionedProjectStore; ADR 0003 records the exact store/transaction boundary
+  and permits `fake-indexeddb` only as a development test adapter. Any measured
+  need for a runtime persistence dependency requires an ADR amendment that
+  preserves the same codec/adapter contracts and keeps library types inside the
   adapter.
 - Use Web Audio/Tone only behind real-time/offline audio interfaces.
 - Implement charts with accessible React/SVG/Canvas presenters over owned data;
@@ -2813,7 +2814,7 @@ determinism risks, adapter boundary, alternatives, and removal strategy.
 Required decision records during implementation are:
 
 - ADR 0002: V2 transport/domain versioning and V1 timing migration;
-- ADR 0003: IndexedDB adapter and migration transaction design;
+- ADR 0003: IndexedDB adapter and migration transaction design (accepted);
 - ADR 0004: MIDI parser choice versus owned parser;
 - ADR 0005: real-time/offline audio and WAV encoding;
 - ADR 0006: visualization approach for piano roll, Map, and Pareto;
@@ -2912,6 +2913,48 @@ At every step the V1 application remains runnable. A feature flag may protect an
 in-progress internal route during a milestone, but no final requirement is
 marked done while its controls, persistence, tests, documentation, or browser
 evidence are absent.
+
+### 19.1 M2 safe-checkpoint implementation state
+
+The programme is paused on local branch `v2`. The branch was created at
+`721f006a48c55ec1a6155d87d023feb89d13f2af` with the full working tree
+preserved; the checkpoint commit is the commit containing this section on
+`refs/heads/v2` (the final handoff records its resolved SHA, since a commit
+cannot embed its own hash). The last known-good V1 commit remains
+`81209c5bd5d2009706f50d4ae8362d2b433c3c06` on `origin/main` and was not
+modified, reset, deployed, or force-pushed.
+
+The following already-started M2 slices are integrated:
+
+- `src/domain/v2/` implements the exact registered M2 project/entity subset,
+  IDs, defaults, validators, graph closure, migrated candidate evidence,
+  normalized history, Library rules, and fresh-project kernel;
+- `src/persistence/v2/v1Migration.ts` and `v1Equivalence.ts` implement pure V1
+  conversion and the explicit before-stage/after-read-back comparison report;
+- `src/persistence/v2/indexedDbSchema.ts`, `indexedDbErrors.ts`, and
+  `indexedDbAuthority.ts` implement the native 22-store authority, revision CAS,
+  strict registered loading, two-phase migration activation, crash retry,
+  obsolete project-owned-row cleanup, and global Library preservation;
+- `src/persistence/uiPreferencesV2.ts` implements the independent bounded
+  presentation-only preference record;
+- `src/domain/performance/v1Compatibility.ts`,
+  `src/audio/tonePlaybackEngine.ts`, and the V1 App storage guard preserve the
+  frozen V1 audition route and corrupt/unsupported recovery bytes.
+
+This remains a partial M2 boundary. `App` does not yet bootstrap from the V2
+authority, valid V1 state still follows the schema-1 reducer/storage route, and
+candidate Save/Seed, V2 recovery presentation, real-browser IndexedDB evidence,
+later-mode/native-snapshot codecs, nonempty undo command/path codecs, and the
+M11 complete envelope closure are deferred. Reserved future stores do not imply
+registered support, and no opaque placeholder payload may be persisted.
+
+The precise next task, only when work is explicitly resumed, is one M2
+bootstrap coordinator: load presentation preferences independently; open and
+strict-load the active IndexedDB graph; otherwise decode, hash, convert, check,
+stage, strict-read, recheck, and activate an untouched V1 source; otherwise
+install the exact fresh kernel. Its tests must cover crash windows, stale CAS,
+equivalence mismatch, retry, and source-byte non-overwrite. No M3 surface should
+start before that boundary is complete.
 
 ## 20. Architectural completion criteria
 

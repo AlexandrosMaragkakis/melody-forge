@@ -74,6 +74,11 @@ export function App() {
   const [notice, setNotice] = useState<Notice | null>(
     loaded.ok ? null : { kind: 'error', message: loaded.error },
   )
+  // A corrupt or unsupported V1 value is recovery evidence. Loading safe
+  // defaults must never make the mount autosave overwrite those original
+  // bytes. A later explicit, validated project import may re-enable V1 saves
+  // while this compatibility UI remains available during the V2 rollout.
+  const v1AutosaveAllowedRef = useRef(loaded.ok)
   const playbackRef = useRef<PlaybackController | null>(null)
   const snapshot = activeSnapshot(project)
 
@@ -91,6 +96,7 @@ export function App() {
   }, [])
 
   useEffect(() => {
+    if (!v1AutosaveAllowedRef.current) return
     const result = saveProjectState(project)
     if (!result.ok) {
       queueMicrotask(() => setNotice({ kind: 'error', message: result.error }))
@@ -335,6 +341,7 @@ export function App() {
         return
       }
       clearTransientState()
+      v1AutosaveAllowedRef.current = true
       dispatch({ type: 'replace-project', state: decoded.value })
       setNotice({ kind: 'info', message: 'Project imported and validated.' })
     } catch (error) {

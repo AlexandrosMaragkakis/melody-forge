@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { PROJECT_STORAGE_KEY } from '../persistence'
 import { App } from './App'
 
 const audioHarness = vi.hoisted(() => ({
@@ -134,6 +135,37 @@ describe('essential browser workspace', () => {
 
     expect(await screen.findAllByText(/Generation 1 · 2\/2/)).not.toHaveLength(0)
     expect(screen.getByText(/Favorites/)).toBeVisible()
+  })
+
+  it.each([
+    {
+      label: 'malformed',
+      recoveryBytes: '{not-valid-json',
+      notice: /Saved local data was not valid JSON/u,
+    },
+    {
+      label: 'unsupported',
+      recoveryBytes:
+        '{"kind":"melody-forge-project","schemaVersion":99,"project":{}}',
+      notice: /Saved local data was incompatible/u,
+    },
+  ])('never overwrites $label V1 recovery bytes with mounted defaults', async ({
+    recoveryBytes,
+    notice,
+  }) => {
+    const user = userEvent.setup()
+    localStorage.setItem(PROJECT_STORAGE_KEY, recoveryBytes)
+
+    render(<App />)
+
+    expect(await screen.findByText(notice)).toBeVisible()
+    expect(localStorage.getItem(PROJECT_STORAGE_KEY)).toBe(recoveryBytes)
+
+    await user.click(screen.getByRole('button', { name: 'Generate population' }))
+    expect(await screen.findAllByRole('article')).toHaveLength(8)
+    await waitFor(() => {
+      expect(localStorage.getItem(PROJECT_STORAGE_KEY)).toBe(recoveryBytes)
+    })
   })
 
   it('limits parent selection to two with visible feedback', async () => {

@@ -1,5 +1,9 @@
 import type * as ToneTypes from 'tone'
 
+import {
+  V1_TRIANGLE_COMPATIBILITY_PROFILE,
+  createV1TriangleCompatibilitySchedule,
+} from '../domain/performance/v1Compatibility'
 import type {
   PlaybackEngine,
   PlaybackEngineSession,
@@ -79,17 +83,9 @@ export class TonePlaybackEngine implements PlaybackEngine {
     this.resetTransport(tone, transport)
     transport.bpm.value = plan.tempoBpm
 
-    const synth = new tone.Synth({
-      oscillator: { type: 'triangle' },
-      envelope: {
-        attack: 0.008,
-        decay: 0.12,
-        sustain: 0.42,
-        release: 0.16,
-      },
-      portamento: 0.008,
-      volume: -8,
-    }).toDestination()
+    const synth = new tone.Synth(
+      V1_TRIANGLE_COMPATIBILITY_PROFILE.synth,
+    ).toDestination()
 
     const active: ActiveToneSession = {
       tone,
@@ -100,19 +96,14 @@ export class TonePlaybackEngine implements PlaybackEngine {
     }
     this.active = active
 
-    for (const event of plan.events) {
-      if (event.midi === null) continue
-      const midi = event.midi
-
+    for (const event of createV1TriangleCompatibilitySchedule(plan.events)) {
       const eventId = transport.schedule((time) => {
         if (active.stopped) return
-        // Leave a small articulation gap while retaining monophonic timing.
-        const gateSeconds = Math.max(0.01, event.durationSeconds * 0.9)
         synth.triggerAttackRelease(
-          tone.Midi(midi).toFrequency(),
-          gateSeconds,
+          tone.Midi(event.midi).toFrequency(),
+          event.gateSeconds,
           time,
-          0.72,
+          event.velocity,
         )
       }, event.startSeconds)
       active.scheduledIds.push(eventId)
