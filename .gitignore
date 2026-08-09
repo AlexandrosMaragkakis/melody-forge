@@ -1,8 +1,86 @@
+# Dependencies and generated output
 node_modules/
 dist/
 coverage/
 playwright-report/
 test-results/
+*.tsbuildinfo
+
+# Environment files and local credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
 *.local
-.DS_Store
+!*.local.example
+.envrc
+.direnv/
+.npmrc
+.pypirc
+credentials.json
+credentials.*.json
+!credentials.example.json
+!credentials.*.example.json
+secrets.json
+secrets.*.json
+!secrets.example.json
+!secrets.*.example.json
+service-account*.json
+!service-account.example.json
+
+# Private keys, certificates, and keystores
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.crt
+*.cer
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+
+# Databases, logs, and diagnostics
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Browser and session captures
+*.har
+cookies*.json
+storage-state*.json
+local-storage*.json
+session-storage*.json
+playwright/.auth/
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.venv/
+venv/
+
+# IDE and operating-system metadata
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
