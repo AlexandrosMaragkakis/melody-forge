@@ -24,12 +24,35 @@ npm run dev
 Open the local URL printed by Vite (normally `http://localhost:5173`). Pressing
 Play is the user gesture that initializes browser audio.
 
-For a production preview:
+For a normal root-based production preview (the same path layout used by the
+Docker image):
 
 ```bash
 npm run build
 npm run preview
 ```
+
+For the GitHub Pages production build and a local preview at the repository
+subpath:
+
+```bash
+npm run build:pages
+npm run preview:pages
+```
+
+Open `http://localhost:4173/melody-forge/` for that Pages-layout preview.
+
+## GitHub Pages
+
+The expected public URL is
+`https://alexandrosmaragkakis.github.io/melody-forge/`. The repository must be
+configured at **Settings → Pages → Source → GitHub Actions** before the deployment
+workflow can publish it. The release is prepared for that URL, but this README
+does not assert that the site has been deployed or is currently live.
+
+Only a successful `main` workflow run may deploy. Pull requests, `v2`, and
+feature branches run verification without publishing. See the
+[development workflow](docs/DEVELOPMENT_WORKFLOW.md) for branch policy.
 
 ## Docker
 
@@ -108,10 +131,12 @@ listening:
 ## Verification commands
 
 ```bash
+npm ci
 npm run typecheck
 npm run lint
 npm test
 npm run build
+npm run build:pages
 npx playwright install chromium
 npm run test:e2e
 ```
@@ -136,12 +161,13 @@ format-0 encoder.
 - [Legacy archaeology and intentional differences](docs/LEGACY_BEHAVIOR.md)
 - [Architecture/dependency ADR](docs/adr/0001-browser-stack-and-domain-boundaries.md)
 - [Implementation checklist](docs/IMPLEMENTATION_PLAN.md)
+- [Development and release workflow](docs/DEVELOPMENT_WORKFLOW.md)
 - [Durable completion state](PROJECT_STATUS.md)
 
 ## Current intentional limits
 
 - Monophonic melodies only; no chords, accompaniment, drums, editor, recording,
-  mixing, accounts, collaboration, or deployment system.
+  mixing, accounts, or collaboration system.
 - Pitch display currently uses sharp names; spelling is presentation-only and
   exported MIDI is unaffected.
 - The built-in synth is deliberately simple and requires browser Web Audio.

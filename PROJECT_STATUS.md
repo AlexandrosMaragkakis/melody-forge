@@ -1,12 +1,14 @@
 # Project status
 
-- Overall: complete
-- Active milestone: M7 complete
-- Last updated: 2026-08-09 (P01-P62 complete; release evidence recorded below)
+- Overall: V1 complete; GitHub Pages release preparation complete on
+  `release/v1-pages`, not yet merged or deployed
+- Active milestone: V1 Pages release preparation
+- Last updated: 2026-08-09 (P01-P62 complete; Pages release infrastructure
+  prepared locally)
 - Preservation rule: never change anything under `legacy/`.
 - Baseline: `docs/LEGACY_SHA256.txt`
-- Immediate next action: none required; the project is ready for local use or
-  continued iteration from the documented architecture and deterministic seeds.
+- Immediate next action: review and merge the release branch into `main`, set
+  **Settings → Pages → Source → GitHub Actions**, then verify the first deployment.
 
 Status vocabulary: `not started`, `in progress`, `done`, `blocked`.
 
@@ -106,9 +108,21 @@ Status vocabulary: `not started`, `in progress`, `done`, `blocked`.
 - Final fresh-copy verification: a newly isolated copy installed 245 locked packages with `npm ci --no-audit --no-fund`; `npm run check` passed typecheck, lint, 148/148 tests, and production build, and the documented dev server returned the Melody Forge page over HTTP.
 - Final preservation proof: exactly two files exist under `legacy/`; the sorted SHA-256 output exactly matches `docs/LEGACY_SHA256.txt`, `git diff --exit-code -- legacy` is clean, and the hashes are `203c91aa48d2df05f33b3a0910d0c69c68bf16ef194913cb7b52acb94e0c6029` and `d0d288968392db0f7ad53fb78a8c0ca00567449c7aab01cd8bb032f42789bff2`.
 - Independent final audit disposition: clear for P58 with no unresolved material product, architecture, accessibility, preservation, or documentation gap.
+- V1 Pages preparation: `npm ci` installed 245 locked packages with 0
+  vulnerabilities; typecheck, lint, 16 files / 148 tests, root production build,
+  and `/melody-forge/` production build passed. Generated asset paths and the
+  repository-subpath preview (including the lazy Tone chunk) were verified in
+  Chromium with no console, page, or request failures.
 
 ## Release handoff
 
+- V1 Pages preparation: the `/melody-forge/` build, CI, deployment workflow,
+  public-release ignore protections, and development workflow are complete on
+  `release/v1-pages`. They are not yet merged to `main` or deployed.
+- Expected Pages URL:
+  `https://alexandrosmaragkakis.github.io/melody-forge/`.
+- V2 remains unchanged in scope and semantics. After the V1 release, bring the
+  release infrastructure into `v2` without merging unfinished V2 into `main`.
 - Browser artifacts: `screenshots/desktop-chromium-workflow.png` and
   `screenshots/mobile-chromium-workflow.png`.
 - Legacy listening seeds: `legacy-amber` and `ordered-legacy-population`.
