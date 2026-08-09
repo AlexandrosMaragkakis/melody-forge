@@ -11,6 +11,15 @@ first serious script I wrote when learning Python. Melody Forge keeps its simple
 melody idea and characteristic fixed C4-B4 pitch mapping available as Legacy
 mode, while leaving every file in `legacy/` byte-for-byte untouched.
 
+## Development approach
+
+Melody Forge is also an experiment in AI-assisted software development. I
+designed the product, supplied the original legacy algorithm, defined and
+refined the requirements, and directed and reviewed implementation performed
+with ChatGPT and OpenAI Codex. The specifications, architecture decisions,
+tests, and release workflow are retained in the repository as part of that
+process.
+
 ## Quick start
 
 Requirements: Node.js 22.12 or newer, npm, and a current Chromium, Firefox, or
