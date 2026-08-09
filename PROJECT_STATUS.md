@@ -8,11 +8,13 @@
 - Last updated: 2026-08-09 (M1 remains complete; the in-flight M2 schema kernel,
   pure V1 migration/equivalence, UI preferences, IndexedDB authority, and V1
   compatibility-audio slices have been integrated on local branch `v2`)
+- Release infrastructure: stable V1 `v1.0.0` is deployed from `main` at commit
+  `555419f4e1cfd8458c3cd327b5d42b33860019a6`; its release/CI infrastructure is
+  aligned here without changing the V1 runtime path or resuming V2 implementation.
 - Preservation rule: never change anything under `legacy/`; the authoritative
   baseline remains `docs/LEGACY_SHA256.txt`.
-- Last known-good V1 commit: `81209c5bd5d2009706f50d4ae8362d2b433c3c06`
-  (`origin/main`). It was identified only; it was not reset, modified, deployed,
-  or force-pushed during this checkpoint.
+- Deployed stable V1 commit: `555419f4e1cfd8458c3cd327b5d42b33860019a6`
+  (`v1.0.0` on `main`).
 - Immediate next action: paused. On explicit resume, implement only the M2
   bootstrap coordinator described below; do not begin M3 first.
 
@@ -240,9 +242,10 @@ Status vocabulary: `not started`, `in progress`, `done`, `blocked`.
 - Modern listening seeds: `glass-orbit` and `rest-fixture`.
 - Evolution recipes: the README records deterministic one-parent and two-parent
   workflows derived from `glass-orbit`.
-- Continuation state: there is no backend, account, service, deployment, or
-  external data dependency to resume; all application state is local and the
-  architecture/specification/plan documents are complete.
+- Continuation state: there is no backend, account, runtime service, or external
+  data dependency to resume; GitHub Pages deployment does not change the local
+  application-state model, and the architecture/specification/plan documents
+  are complete.
 
 ## Known limitations / blockers
 

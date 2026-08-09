@@ -6,6 +6,16 @@ one melody line, compact constraints, quick listening, human parent selection,
 favorites, recent history, and JSON/MIDI export. It has no backend, account,
 API key, telemetry, remote samples, or runtime network dependency.
 
+## Release and branch status
+
+Stable V1 `v1.0.0` is deployed from `main` at
+`https://alexandrosmaragkakis.github.io/melody-forge/`. This integration branch
+only aligns that release/CI infrastructure with the unfinished `v2` line: M1
+remains complete, M2 remains partially implemented and paused, M3-M11 remain
+unstarted, and the application still follows the documented V1 runtime path.
+Bounded `feature/v2-*` work targets `v2`; only `main`, including manual workflow
+dispatches on the `main` ref, may deploy.
+
 The preserved [`legacy/notes_generator1.py`](legacy/notes_generator1.py) is the
 first serious script I wrote when learning Python. Melody Forge keeps its simple
 melody idea and characteristic fixed C4-B4 pitch mapping available as Legacy
@@ -24,12 +34,21 @@ npm run dev
 Open the local URL printed by Vite (normally `http://localhost:5173`). Pressing
 Play is the user gesture that initializes browser audio.
 
-For a production preview:
+For a normal root-based production preview:
 
 ```bash
 npm run build
 npm run preview
 ```
+
+For a GitHub Pages production build and repository-subpath preview:
+
+```bash
+npm run build:pages
+npm run preview:pages
+```
+
+Open `http://localhost:4173/melody-forge/` for the Pages-layout preview.
 
 ## Docker
 
@@ -112,6 +131,7 @@ npm run typecheck
 npm run lint
 npm test
 npm run build
+npm run build:pages
 npx playwright install chromium
 npm run test:e2e
 ```
@@ -136,12 +156,13 @@ format-0 encoder.
 - [Legacy archaeology and intentional differences](docs/LEGACY_BEHAVIOR.md)
 - [Architecture/dependency ADR](docs/adr/0001-browser-stack-and-domain-boundaries.md)
 - [Implementation checklist](docs/IMPLEMENTATION_PLAN.md)
+- [Development and release workflow](docs/DEVELOPMENT_WORKFLOW.md)
 - [Durable completion state](PROJECT_STATUS.md)
 
 ## Current intentional limits
 
 - Monophonic melodies only; no chords, accompaniment, drums, editor, recording,
-  mixing, accounts, collaboration, or deployment system.
+  mixing, accounts, or collaboration system.
 - Pitch display currently uses sharp names; spelling is presentation-only and
   exported MIDI is unaffected.
 - The built-in synth is deliberately simple and requires browser Web Audio.
