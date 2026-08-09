@@ -1,0 +1,5 @@
+# SHA-256 preservation baseline recorded before implementation.
+# Paths are repository-relative. Regenerate with:
+# find legacy -type f -print0 | sort -z | xargs -0 sha256sum
+203c91aa48d2df05f33b3a0910d0c69c68bf16ef194913cb7b52acb94e0c6029  legacy/notes_generator1.py
+d0d288968392db0f7ad53fb78a8c0ca00567449c7aab01cd8bb032f42789bff2  legacy/tmp.py

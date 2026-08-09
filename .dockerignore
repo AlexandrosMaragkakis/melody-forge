@@ -1,0 +1,14 @@
+.git
+.gitignore
+legacy
+node_modules
+dist
+coverage
+docs
+e2e
+playwright-report
+test-results
+screenshots
+*.md
+Dockerfile
+npm-debug.log*
