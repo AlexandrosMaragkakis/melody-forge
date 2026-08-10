@@ -149,28 +149,30 @@ exercise upgrade, atomic rollback, quota/error injection seams, CAS conflicts,
 crash-resume, and multi-store transactions quickly. Real Chromium tests remain
 the authority for browser integration and blocked/versionchange behavior.
 
-## Checkpoint implementation state
+## Post-coordinator checkpoint implementation state
 
-At the 2026-08-09 safe checkpoint, the decision is implemented through the M2
-registered boundary on local branch `v2`: the native 22-store schema, typed
-errors, registered graph loader, create/open/replace/save CAS, two-phase
-stage/verify activation, crash retry, obsolete project-owned-row cleanup, and
-global Library merge/preservation are present under `src/persistence/v2/`.
-`fake-indexeddb` is a development-only dependency and the focused authority
-tests pass.
+At the 2026-08-10 checkpoint, the decision is implemented through the M2
+registered boundary and headless bootstrap coordinator: the native 22-store
+schema, typed errors, registered graph loader, create/open/replace/save CAS,
+two-phase stage/verify activation, crash retry, obsolete project-owned-row
+cleanup, and global Library merge/preservation are present under
+`src/persistence/v2/`.
+`fake-indexeddb` is a development-only dependency. The coordinator's 11 focused
+tests additionally prove active/fresh/migrated selection, both equivalence
+gates, pending/verified retry, stale CAS, unavailable storage, invalid-source
+handling, and raw V1 source preservation.
 
-The decision is not yet installed as the application's bootstrap authority.
-The current UI still runs the valid V1 reducer/localStorage path; automatic V1
-migration, active-project restore, recovery presentation, candidate Save/Seed,
-and real-Chromium IndexedDB evidence remain incomplete. Later stores are
-reserved but their payloads remain rejected until registered by their owning
-milestones. The next task on explicit resume is the single M2 bootstrap
-coordinator defined in `docs/V2_ARCHITECTURE.md`; M3 is not authorized before
-that integration boundary.
+The coordinator is intentionally not invoked by the application UI. The current
+UI still runs the valid V1 reducer/localStorage path; recovery presentation,
+candidate Save/Seed, and real-Chromium IndexedDB evidence remain incomplete.
+Later stores are reserved but their payloads remain rejected until registered
+by their owning milestones. Any App integration requires a separately
+authorized scope; M3 is not authorized from this checkpoint.
 
 This ADR is checkpointed by the commit containing this note on
-`refs/heads/v2`; the exact resolved SHA is recorded in the handoff report. Its
-starting integration HEAD is `721f006a48c55ec1a6155d87d023feb89d13f2af`.
+`feature/v2-bootstrap-coordinator`; the exact resolved SHA is recorded in the
+handoff report. Its `v2` base is
+`19c9c356ddb3e1f27fb7e61344133c56fa35376e`.
 
 ## Consequences
 

@@ -2914,15 +2914,13 @@ in-progress internal route during a milestone, but no final requirement is
 marked done while its controls, persistence, tests, documentation, or browser
 evidence are absent.
 
-### 19.1 M2 safe-checkpoint implementation state
+### 19.1 M2 post-coordinator checkpoint implementation state
 
-The programme is paused on local branch `v2`. The branch was created at
-`721f006a48c55ec1a6155d87d023feb89d13f2af` with the full working tree
-preserved; the checkpoint commit is the commit containing this section on
-`refs/heads/v2` (the final handoff records its resolved SHA, since a commit
-cannot embed its own hash). The last known-good V1 commit remains
-`81209c5bd5d2009706f50d4ae8362d2b433c3c06` on `origin/main` and was not
-modified, reset, deployed, or force-pushed.
+The scoped branch is `feature/v2-bootstrap-coordinator`, created from clean,
+fetched `v2` at `19c9c356ddb3e1f27fb7e61344133c56fa35376e`. The checkpoint
+commit is the commit containing this section (the final handoff records its
+resolved SHA, since a commit cannot embed its own hash). Stable V1 remains
+unchanged and `legacy/` remains hash-locked.
 
 The following already-started M2 slices are integrated:
 
@@ -2937,24 +2935,28 @@ The following already-started M2 slices are integrated:
   obsolete project-owned-row cleanup, and global Library preservation;
 - `src/persistence/uiPreferencesV2.ts` implements the independent bounded
   presentation-only preference record;
+- `src/persistence/v2/bootstrapCoordinator.ts` implements the headless,
+  dependency-injected application bootstrap order: independent presentation
+  preferences, active-V2 precedence, exact fresh-kernel installation, V1
+  decode/hash/convert/before-stage equivalence, idempotent pending/verified
+  stage resume, strict read-back/after-read-back equivalence, and CAS activation;
 - `src/domain/performance/v1Compatibility.ts`,
   `src/audio/tonePlaybackEngine.ts`, and the V1 App storage guard preserve the
   frozen V1 audition route and corrupt/unsupported recovery bytes.
 
-This remains a partial M2 boundary. `App` does not yet bootstrap from the V2
-authority, valid V1 state still follows the schema-1 reducer/storage route, and
+This remains a partial M2 boundary. The coordinator is deliberately not invoked
+by `App`; valid V1 state still follows the schema-1 reducer/storage route, and
 candidate Save/Seed, V2 recovery presentation, real-browser IndexedDB evidence,
 later-mode/native-snapshot codecs, nonempty undo command/path codecs, and the
 M11 complete envelope closure are deferred. Reserved future stores do not imply
 registered support, and no opaque placeholder payload may be persisted.
 
-The precise next task, only when work is explicitly resumed, is one M2
-bootstrap coordinator: load presentation preferences independently; open and
-strict-load the active IndexedDB graph; otherwise decode, hash, convert, check,
-stage, strict-read, recheck, and activate an untouched V1 source; otherwise
-install the exact fresh kernel. Its tests must cover crash windows, stale CAS,
-equivalence mismatch, retry, and source-byte non-overwrite. No M3 surface should
-start before that boundary is complete.
+The headless coordinator boundary is complete and its 11 focused tests cover
+unavailable IndexedDB, active/fresh/migrated origins, crash retry,
+pending/verified resume, stale CAS, before-stage and after-read-back mismatch,
+invalid V1 sources, and source-byte non-overwrite. App/recovery presentation,
+real-browser IndexedDB evidence, and candidate Save/Seed remain separately
+deferred; no M3 surface should start from this checkpoint.
 
 ## 20. Architectural completion criteria
 

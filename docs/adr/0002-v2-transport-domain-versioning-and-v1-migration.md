@@ -388,26 +388,26 @@ recovery value, and avoids silent data loss.
 
 ## Checkpoint implementation state
 
-At the 2026-08-09 safe checkpoint on local branch `v2`, the canonical transport
+At the 2026-08-10 post-coordinator checkpoint, the canonical transport
 and candidate-specific V1 compatibility profiles are implemented as pure domain
 foundations. The already-started M2 integration also includes strict migrated
 candidate/genome/timeline/pairing records, pure project/candidate conversion,
 source-scoped hashes and copied IDs, normalized V1 history/Library mapping,
 explicit equivalence reports, the frozen `v1-triangle-compat` performance route,
 and a two-phase IndexedDB authority capable of staging and activating a verified
-graph.
+graph. The headless coordinator now invokes this complete ordering, including
+both equivalence gates, pending/verified retry, stale CAS, and raw-source
+preservation.
 
-This is not an end-to-end migration claim. The application bootstrap does not
-yet invoke conversion, equivalence, staging, read-back, or activation; the V2
-transport is not connected to controller/UI/MIDI/export; candidate Save/Seed and
-recovery UI are absent; and real-browser migration evidence is deferred. These
-limitations remain M2 work. The exact next task is the bootstrap coordinator
-recorded in Architecture section 19.1, followed by another checkpoint before
-any M3 work.
+This is not an end-to-end UI migration claim. The coordinator is intentionally
+not invoked by `App`; the V2 transport is not connected to
+controller/UI/MIDI/export; candidate Save/Seed and recovery UI are absent; and
+real-browser migration evidence is deferred. These limitations remain M2 work,
+and no M3 work begins from this checkpoint.
 
-The checkpoint commit is the commit containing this note on `refs/heads/v2`;
-the final handoff resolves its exact SHA. The last known-good V1 commit remains
-`81209c5bd5d2009706f50d4ae8362d2b433c3c06` and was not changed or deployed.
+The checkpoint commit is the commit containing this note on
+`feature/v2-bootstrap-coordinator`; the final handoff resolves its exact SHA.
+Stable V1 and `legacy/` were not changed or deployed.
 
 ## Consequences
 
