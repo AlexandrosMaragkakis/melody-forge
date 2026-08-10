@@ -6,20 +6,21 @@ Status vocabulary is exactly: `not started`, `in progress`, `done`, `blocked`.
 
 ## 2026-08-10 post-coordinator trace note
 
-The programme is scoped on `feature/v2-bootstrap-coordinator`, based on clean
-fetched `v2` at `19c9c356ddb3e1f27fb7e61344133c56fa35376e`. M1 is complete;
-M2 is partial; M3 through M11 have not begun implementation. The M2 rows below
-now also trace the tested headless bootstrap coordinator. They remain incomplete
-wherever their listed App/UI, browser, full-envelope, later-payload, or export
-evidence is absent.
+This checkpoint targets `v2` and was developed from clean fetched `v2` at
+`19c9c356ddb3e1f27fb7e61344133c56fa35376e`. M1 is complete; M2 is partial;
+M3 through M11 have not begun implementation. The M2 rows below now also trace
+the tested headless bootstrap coordinator. They remain incomplete wherever their
+listed App/UI, browser, full-envelope, later-payload, or export evidence is
+absent.
 
 The headless coordinator recorded in Architecture section 19.1 is implemented
 and intentionally not wired into React or the V1 reducer. Its focused suite
 covers active/fresh/migrated origins, independent preference fallback, both
-equivalence gates, pending/verified retry, stale CAS, unavailable storage,
-invalid V1 sources, and raw-source preservation. Candidate Save/Seed, nonempty
-undo command/path registration, later mode/entity codecs, complete M11
-envelopes, recovery UI, and real-Chromium IndexedDB evidence remain deferred.
+equivalence gates, pending/verified retry, stale CAS, unavailable/blocked
+storage, revision/collision/abort failures, invalid V1 sources, and raw-source
+preservation. Candidate Save/Seed, nonempty undo command/path registration,
+later mode/entity codecs, complete M11 envelopes, recovery UI, and real-Chromium
+IndexedDB evidence remain deferred.
 The checkpoint commit is the commit containing this note; its resolved SHA is
 recorded in the final handoff.
 

@@ -7,8 +7,8 @@
   checkpoint; no M3 work has begun
 - Last updated: 2026-08-10 (M1 remains complete; the in-flight M2 schema kernel,
   pure V1 migration/equivalence, UI preferences, IndexedDB authority, headless
-  bootstrap coordinator, and V1 compatibility-audio slices are integrated on
-  `feature/v2-bootstrap-coordinator`, based on clean `v2`)
+  bootstrap coordinator, and V1 compatibility-audio slices are integrated into
+  the post-coordinator `v2` checkpoint)
 - Release infrastructure: stable V1 `v1.0.0` is deployed from `main` at commit
   `555419f4e1cfd8458c3cd327b5d42b33860019a6`; its release/CI infrastructure is
   aligned here without changing the V1 runtime path or resuming V2 implementation.
@@ -48,13 +48,13 @@ Status vocabulary: `not started`, `in progress`, `done`, `blocked`.
 | V2-M2-005 | done | Native IndexedDB schema/error/authority modules implement the exact 22-store M2 boundary, registered-graph loading, create/open/replace/save CAS, two-phase stage/verify activation, typed failures, crash retry, local-wins Library merge, and obsolete project-owned-row cleanup. `fake-indexeddb` is development-only. Browser bootstrap and real-Chromium IDB evidence remain outside this slice. |
 | V2-M2-006 | done | `src/persistence/uiPreferencesV2.ts` implements the independent 15-leaf presentation-only localStorage record, exact defaults/key order, UTF-8 and structural bounds, strict fallback, and injected-registry boundary tests. Preference controls are not yet connected to the UI. |
 | V2-M2-007 | done | `src/domain/performance/v1Compatibility.ts` freezes the V1 triangle factory/schedule constants and `tonePlaybackEngine.ts` consumes them. `App.tsx` no longer mount-overwrites corrupt or unsupported V1 recovery bytes; explicit validated import can re-enable V1 autosave. |
-| V2-M2-008 | in progress | `src/persistence/v2/bootstrapCoordinator.ts` now provides the headless deterministic orchestration boundary: independent preference loading, active-V2 precedence, exact fresh install, V1 decode/hash/convert/two-gate equivalence, idempotent pending/verified resume, strict read-back, CAS activation, and typed failure phases. `bootstrapCoordinator.test.ts` passes 11/11 across unavailable storage, active/fresh/migrated paths, crash retry, verified resume, both mismatch gates, stale CAS, and raw V1 byte preservation. The coordinator is deliberately not wired to `App`; candidate Save/Seed, recovery UI, and real-browser IndexedDB evidence remain. |
+| V2-M2-008 | in progress | `src/persistence/v2/bootstrapCoordinator.ts` now provides the headless deterministic orchestration boundary: independent preference loading, active-V2 precedence, exact fresh install, V1 decode/hash/convert/two-gate equivalence, idempotent pending/verified resume, strict read-back, CAS activation, and typed failure phases. `bootstrapCoordinator.test.ts` passes 16/16 across preference-read failure, unavailable/blocked storage, active/fresh/migrated paths, crash retry, verified resume, both mismatch gates, revision conflict, immutable collision, transaction abort, stale CAS, and raw V1 byte preservation. The coordinator is deliberately not wired to `App`; candidate Save/Seed, recovery UI, and real-browser IndexedDB evidence remain. |
 
 ### V2 M2 post-coordinator checkpoint
 
-- Branch: `feature/v2-bootstrap-coordinator`, created from clean, fetched `v2`
-  at `19c9c356ddb3e1f27fb7e61344133c56fa35376e`. The checkpoint commit is the
-  commit containing this record; its exact SHA is emitted in the final handoff
+- Target: the post-coordinator checkpoint on `v2`, developed from clean, fetched
+  `v2` at `19c9c356ddb3e1f27fb7e61344133c56fa35376e`. The checkpoint commit is the
+  commit containing this record; its exact SHA is emitted in the merge handoff
   because a commit cannot contain its own hash.
 - Completed milestone: M1. Partially implemented milestone: M2. Unstarted
   implementation milestones: M3 through M11.
@@ -213,14 +213,14 @@ Status vocabulary: `not started`, `in progress`, `done`, `blocked`.
   returned zero.
 - V2 M2 bootstrap-coordinator focused gate:
   `/usr/bin/time -p npm test -- --run src/persistence/v2/bootstrapCoordinator.test.ts src/persistence/v2/indexedDbAuthority.test.ts src/persistence/v2/indexedDbRegistered.test.ts src/persistence/v2/m2PersistenceBoundary.test.ts src/persistence/v2/v1Migration.test.ts src/persistence/v2/v1Equivalence.test.ts src/persistence/v2/sourceHash.test.ts src/persistence/uiPreferencesV2.test.ts src/domain/v2/kernel.test.ts src/app/App.test.tsx src/persistence/v1Fixtures.test.ts`
-  passed 11/11 files and 100/100 tests in 6.12 s real time.
+  passed 11/11 files and 105/105 tests.
 - V2 M2 bootstrap-coordinator integrated gate: `/usr/bin/time -p npm run check`
-  passed in 27.32 s real time: typecheck, zero-finding lint, 35 test files / 294
+  passed: typecheck, zero-finding lint, 35 test files / 299
   tests, Vite 8.2.1 production build with 1,007 transformed modules, and all 691
   traceability IDs across 11 milestones.
 - V2 M2 bootstrap-coordinator browser regression: `/usr/bin/time -p npm run
   test:e2e` rebuilt the same 1,007-module production bundle and passed 4/4
-  desktop/mobile creative-loop and V1-compatibility Chromium tests in 18.46 s
+  desktop/mobile creative-loop and V1-compatibility Chromium tests in 19.16 s
   real time. Only the known benign NO_COLOR/FORCE_COLOR Node warnings appeared.
 - Initial scaffold: `npm install --no-audit --no-fund` installed 243 locked packages.
 - Initial scaffold: `npm run typecheck` passed.
@@ -282,19 +282,21 @@ For every milestone, complete rows in dependency order, run the relevant typeche
 
 ## 2026-08-10 post-coordinator checkpoint boundary
 
-Work is scoped on `feature/v2-bootstrap-coordinator`, created from clean fetched
-`v2` at `19c9c356ddb3e1f27fb7e61344133c56fa35376e`. M1 is complete, M2 is
-partially implemented, and M3 through M11 are unstarted. Integrated M2 code now
-also includes the headless bootstrap coordinator behind the current reducer.
+This checkpoint targets `v2` and was developed from clean fetched `v2` at
+`19c9c356ddb3e1f27fb7e61344133c56fa35376e`. M1 is complete, M2 is partially
+implemented, and M3 through M11 are unstarted. Integrated M2 code now also
+includes the headless bootstrap coordinator behind the current reducer.
 Rows remain `in progress`, not `done`, wherever UI, browser, export,
 later-payload, or full-envelope evidence remains.
 
 `src/persistence/v2/bootstrapCoordinator.ts` now loads preferences independently,
 strict-loads active V2 first, otherwise migrates an untouched V1 source through
 both equivalence gates and two-phase activation, or installs the exact fresh
-kernel. Its 11 focused tests prove crash retry, pending/verified resume,
-stale-CAS protection, both mismatch gates, invalid-source preservation, and no
-V1 writes. It remains intentionally disconnected from `App` and the V1 reducer.
+kernel. Its 16 focused tests prove preference-read isolation, blocked/unavailable
+storage handling, crash retry, pending/verified resume, revision/collision/abort
+failure propagation, stale-CAS protection, both mismatch gates, invalid-source
+preservation, and no V1 writes. It remains intentionally disconnected from
+`App` and the V1 reducer.
 Candidate Save/Seed, nonempty undo, later mode/entity codecs, M11 envelopes,
 recovery UI, and real-browser IndexedDB evidence remain deferred. Stop again
 before M3. The checkpoint commit is the commit containing this note; the final

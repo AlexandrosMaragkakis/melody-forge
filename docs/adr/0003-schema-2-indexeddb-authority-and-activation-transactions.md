@@ -157,9 +157,10 @@ schema, typed errors, registered graph loader, create/open/replace/save CAS,
 two-phase stage/verify activation, crash retry, obsolete project-owned-row
 cleanup, and global Library merge/preservation are present under
 `src/persistence/v2/`.
-`fake-indexeddb` is a development-only dependency. The coordinator's 11 focused
+`fake-indexeddb` is a development-only dependency. The coordinator's 16 focused
 tests additionally prove active/fresh/migrated selection, both equivalence
-gates, pending/verified retry, stale CAS, unavailable storage, invalid-source
+gates, pending/verified retry, stale CAS, preference-read isolation,
+unavailable/blocked storage, revision/collision/abort failures, invalid-source
 handling, and raw V1 source preservation.
 
 The coordinator is intentionally not invoked by the application UI. The current
@@ -169,9 +170,8 @@ Later stores are reserved but their payloads remain rejected until registered
 by their owning milestones. Any App integration requires a separately
 authorized scope; M3 is not authorized from this checkpoint.
 
-This ADR is checkpointed by the commit containing this note on
-`feature/v2-bootstrap-coordinator`; the exact resolved SHA is recorded in the
-handoff report. Its `v2` base is
+This ADR is checkpointed by the commit containing this note and targets `v2`;
+the exact resolved SHA is recorded in the merge handoff. Its `v2` base is
 `19c9c356ddb3e1f27fb7e61344133c56fa35376e`.
 
 ## Consequences

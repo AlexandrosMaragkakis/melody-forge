@@ -2916,11 +2916,11 @@ evidence are absent.
 
 ### 19.1 M2 post-coordinator checkpoint implementation state
 
-The scoped branch is `feature/v2-bootstrap-coordinator`, created from clean,
-fetched `v2` at `19c9c356ddb3e1f27fb7e61344133c56fa35376e`. The checkpoint
-commit is the commit containing this section (the final handoff records its
-resolved SHA, since a commit cannot embed its own hash). Stable V1 remains
-unchanged and `legacy/` remains hash-locked.
+This checkpoint targets `v2` and was developed from clean, fetched `v2` at
+`19c9c356ddb3e1f27fb7e61344133c56fa35376e`. The checkpoint commit is the commit
+containing this section (the merge handoff records its resolved SHA, since a
+commit cannot embed its own hash). Stable V1 remains unchanged and `legacy/`
+remains hash-locked.
 
 The following already-started M2 slices are integrated:
 
@@ -2951,12 +2951,13 @@ later-mode/native-snapshot codecs, nonempty undo command/path codecs, and the
 M11 complete envelope closure are deferred. Reserved future stores do not imply
 registered support, and no opaque placeholder payload may be persisted.
 
-The headless coordinator boundary is complete and its 11 focused tests cover
-unavailable IndexedDB, active/fresh/migrated origins, crash retry,
-pending/verified resume, stale CAS, before-stage and after-read-back mismatch,
-invalid V1 sources, and source-byte non-overwrite. App/recovery presentation,
-real-browser IndexedDB evidence, and candidate Save/Seed remain separately
-deferred; no M3 surface should start from this checkpoint.
+The headless coordinator boundary is complete and its 16 focused tests cover
+preference-read failure, unavailable/blocked IndexedDB, active/fresh/migrated
+origins, crash retry, pending/verified resume, revision/collision/abort failure,
+stale CAS, before-stage and after-read-back mismatch, invalid V1 sources, and
+source-byte non-overwrite. App/recovery presentation, real-browser IndexedDB
+evidence, and candidate Save/Seed remain separately deferred; no M3 surface
+should start from this checkpoint.
 
 ## 20. Architectural completion criteria
 

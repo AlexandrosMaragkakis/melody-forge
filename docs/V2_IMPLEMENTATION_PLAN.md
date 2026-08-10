@@ -6,19 +6,21 @@ For every milestone, complete rows in dependency order, run the relevant typeche
 
 ## 2026-08-10 post-coordinator checkpoint boundary
 
-Work is scoped on `feature/v2-bootstrap-coordinator`, created from clean fetched
-`v2` at `19c9c356ddb3e1f27fb7e61344133c56fa35376e`. M1 is complete, M2 is
-partially implemented, and M3 through M11 are unstarted. Integrated M2 code now
-also includes the headless bootstrap coordinator behind the current reducer.
+This checkpoint targets `v2` and was developed from clean fetched `v2` at
+`19c9c356ddb3e1f27fb7e61344133c56fa35376e`. M1 is complete, M2 is partially
+implemented, and M3 through M11 are unstarted. Integrated M2 code now also
+includes the headless bootstrap coordinator behind the current reducer.
 Rows remain `in progress`, not `done`, wherever UI, browser, export,
 later-payload, or full-envelope evidence remains.
 
 `src/persistence/v2/bootstrapCoordinator.ts` now loads preferences independently,
 strict-loads active V2 first, otherwise migrates an untouched V1 source through
 both equivalence gates and two-phase activation, or installs the exact fresh
-kernel. Its 11 focused tests prove crash retry, pending/verified resume,
-stale-CAS protection, both mismatch gates, invalid-source preservation, and no
-V1 writes. It remains intentionally disconnected from `App` and the V1 reducer.
+kernel. Its 16 focused tests prove preference-read isolation, blocked/unavailable
+storage handling, crash retry, pending/verified resume, revision/collision/abort
+failure propagation, stale-CAS protection, both mismatch gates, invalid-source
+preservation, and no V1 writes. It remains intentionally disconnected from
+`App` and the V1 reducer.
 Candidate Save/Seed, nonempty undo, later mode/entity codecs, M11 envelopes,
 recovery UI, and real-browser IndexedDB evidence remain deferred. Stop again
 before M3. The checkpoint commit is the commit containing this note; the final

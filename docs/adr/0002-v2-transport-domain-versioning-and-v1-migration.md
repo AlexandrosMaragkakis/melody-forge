@@ -405,9 +405,9 @@ controller/UI/MIDI/export; candidate Save/Seed and recovery UI are absent; and
 real-browser migration evidence is deferred. These limitations remain M2 work,
 and no M3 work begins from this checkpoint.
 
-The checkpoint commit is the commit containing this note on
-`feature/v2-bootstrap-coordinator`; the final handoff resolves its exact SHA.
-Stable V1 and `legacy/` were not changed or deployed.
+The checkpoint commit is the commit containing this note and targets `v2`; the
+merge handoff resolves its exact SHA. Stable V1 and `legacy/` were not changed
+or deployed.
 
 ## Consequences
 

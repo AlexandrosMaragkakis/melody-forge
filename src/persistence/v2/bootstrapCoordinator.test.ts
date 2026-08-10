@@ -23,6 +23,7 @@ import {
   type V2BootstrapProjectStoreV2,
 } from './bootstrapCoordinator'
 import { NativeIndexedDbAuthorityV2 } from './indexedDbAuthority'
+import { indexedDbPersistenceError } from './indexedDbErrors'
 import { SCHEMA_2_DATABASE_NAME } from './indexedDbSchema'
 import { REGISTERED_M2_PERSISTENCE_BOUNDARY_V2 } from './m2PersistenceBoundary'
 import {
@@ -183,6 +184,71 @@ async function rawDelete(
 }
 
 describe('M2 bootstrap coordinator', () => {
+  it('continues domain bootstrap with defaults when preference storage throws', async () => {
+    const factory = new IDBFactory()
+    const store = nativeStore(factory)
+    const storage = trackingStorage({ [PROJECT_STORAGE_KEY]: V1_SOURCE })
+    const projectIdFactory = vi.fn(() => 'must-not-be-created')
+    const throwingReader = {
+      getItem(key: string): string | null {
+        storage.reads.push(key)
+        if (key === UI_PREFERENCES_STORAGE_KEY_V2) {
+          throw new Error('preference storage denied')
+        }
+        return storage.records.get(key) ?? null
+      },
+    }
+
+    const result = await runV2BootstrapCoordinator(
+      coordinatorOptions(storage, store, {
+        storage: throwingReader,
+        projectIdFactory,
+      }),
+    )
+
+    expect(result).toMatchObject({
+      ok: true,
+      origin: 'migrated-v1',
+      preferences: DEFAULT_UI_PREFERENCES_V2,
+      preferenceWarning:
+        'UI preferences could not be read: preference storage denied',
+    })
+    expect(storage.reads).toEqual([
+      UI_PREFERENCES_STORAGE_KEY_V2,
+      PROJECT_STORAGE_KEY,
+    ])
+    expect(storage.records.get(PROJECT_STORAGE_KEY)).toBe(V1_SOURCE)
+    expect(projectIdFactory).not.toHaveBeenCalled()
+  })
+
+  it('reports a blocked IndexedDB open without reading V1 or creating fallback state', async () => {
+    const target = new EventTarget()
+    const blockedFactory = {
+      open: () => {
+        queueMicrotask(() => target.dispatchEvent(new Event('blocked')))
+        return target as unknown as IDBOpenDBRequest
+      },
+    } as unknown as IDBFactory
+    const store = nativeStore(blockedFactory)
+    const storage = trackingStorage({ [PROJECT_STORAGE_KEY]: V1_SOURCE })
+    const projectIdFactory = vi.fn(() => 'must-not-be-created')
+
+    const result = await runV2BootstrapCoordinator(
+      coordinatorOptions(storage, store, { projectIdFactory }),
+    )
+
+    expect(result).toMatchObject({ ok: false, phase: 'open-indexeddb' })
+    expect(result.ok).toBe(false)
+    if (result.ok) return
+    expect(result.error.cause).toMatchObject({
+      code: 'blocked',
+      operation: 'open',
+    })
+    expect(storage.reads).toEqual([UI_PREFERENCES_STORAGE_KEY_V2])
+    expect(storage.records.get(PROJECT_STORAGE_KEY)).toBe(V1_SOURCE)
+    expect(projectIdFactory).not.toHaveBeenCalled()
+  })
+
   it('loads preference defaults independently before reporting unavailable IndexedDB', async () => {
     const storage = trackingStorage({
       [UI_PREFERENCES_STORAGE_KEY_V2]: '{"version":"unsupported"}',
@@ -465,8 +531,136 @@ describe('M2 bootstrap coordinator', () => {
       ok: false,
       phase: 'activate-v1-migration',
     })
+    expect(result.ok).toBe(false)
+    if (result.ok) return
+    expect(result.error.cause).toMatchObject({
+      code: 'conflict',
+      operation: 'activate-staged-migration',
+    })
     await expect(store.loadActiveProject()).resolves.toEqual(racer)
     expect(storage.records.get(PROJECT_STORAGE_KEY)).toBe(V1_SOURCE)
+  })
+
+  it('reports a staged project-revision conflict without falling back', async () => {
+    const factory = new IDBFactory()
+    const store = nativeStore(factory)
+    const storage = trackingStorage({ [PROJECT_STORAGE_KEY]: V1_SOURCE })
+    const projectIdFactory = vi.fn(() => 'must-not-be-created')
+    const conflictingStore = delegateStore(store, {
+      activateStagedMigration: () =>
+        Promise.reject(
+          indexedDbPersistenceError(
+            'conflict',
+            'activate-staged-migration',
+            'staged project revision is stale or missing',
+          ),
+        ),
+    })
+
+    const result = await runV2BootstrapCoordinator(
+      coordinatorOptions(storage, conflictingStore, { projectIdFactory }),
+    )
+
+    expect(result).toMatchObject({
+      ok: false,
+      phase: 'activate-v1-migration',
+    })
+    expect(result.ok).toBe(false)
+    if (result.ok) return
+    expect(result.error.cause).toMatchObject({
+      code: 'conflict',
+      operation: 'activate-staged-migration',
+    })
+    await expect(store.loadActiveProject()).resolves.toBeNull()
+    await expect(
+      store.loadMigrationReceiptBySourceHash(await v1SourceHash()),
+    ).resolves.toMatchObject({ status: 'pending-readback' })
+    expect(storage.records.get(PROJECT_STORAGE_KEY)).toBe(V1_SOURCE)
+    expect(projectIdFactory).not.toHaveBeenCalled()
+  })
+
+  it('reports an immutable stage collision without falling back', async () => {
+    const factory = new IDBFactory()
+    const store = nativeStore(factory)
+    const storage = trackingStorage({ [PROJECT_STORAGE_KEY]: V1_SOURCE })
+    const projectIdFactory = vi.fn(() => 'must-not-be-created')
+    const collidingStore = delegateStore(store, {
+      stageV1Migration: () =>
+        Promise.reject(
+          indexedDbPersistenceError(
+            'immutable-collision',
+            'stage-v1-migration',
+            'unequal immutable content occupies the migration identity',
+          ),
+        ),
+    })
+
+    const result = await runV2BootstrapCoordinator(
+      coordinatorOptions(storage, collidingStore, { projectIdFactory }),
+    )
+
+    expect(result).toMatchObject({
+      ok: false,
+      phase: 'stage-v1-migration',
+    })
+    expect(result.ok).toBe(false)
+    if (result.ok) return
+    expect(result.error.cause).toMatchObject({
+      code: 'immutable-collision',
+      operation: 'stage-v1-migration',
+    })
+    await expect(store.loadActiveProject()).resolves.toBeNull()
+    await expect(
+      store.loadMigrationReceiptBySourceHash(await v1SourceHash()),
+    ).resolves.toBeNull()
+    expect(storage.records.get(PROJECT_STORAGE_KEY)).toBe(V1_SOURCE)
+    expect(projectIdFactory).not.toHaveBeenCalled()
+  })
+
+  it('rolls back an injected activation abort and resumes without fallback', async () => {
+    const factory = new IDBFactory()
+    let abortActivation = true
+    const store = new NativeIndexedDbAuthorityV2({
+      indexedDb: factory,
+      boundary: REGISTERED_M2_PERSISTENCE_BOUNDARY_V2,
+      injectFailure: ({ operation, point }) => {
+        if (
+          abortActivation &&
+          operation === 'activate-staged-migration' &&
+          point === 'before-active-metadata-write'
+        ) {
+          throw new DOMException('injected transaction abort', 'AbortError')
+        }
+      },
+    })
+    const storage = trackingStorage({ [PROJECT_STORAGE_KEY]: V1_SOURCE })
+    const projectIdFactory = vi.fn(() => 'must-not-be-created')
+    const options = coordinatorOptions(storage, store, { projectIdFactory })
+
+    const aborted = await runV2BootstrapCoordinator(options)
+
+    expect(aborted).toMatchObject({
+      ok: false,
+      phase: 'activate-v1-migration',
+    })
+    expect(aborted.ok).toBe(false)
+    if (aborted.ok) return
+    expect(aborted.error.cause).toMatchObject({
+      code: 'abort',
+      operation: 'activate-staged-migration',
+    })
+    await expect(store.loadActiveProject()).resolves.toBeNull()
+    await expect(
+      store.loadMigrationReceiptBySourceHash(await v1SourceHash()),
+    ).resolves.toMatchObject({ status: 'pending-readback' })
+    expect(storage.records.get(PROJECT_STORAGE_KEY)).toBe(V1_SOURCE)
+    expect(projectIdFactory).not.toHaveBeenCalled()
+
+    abortActivation = false
+    const retried = await runV2BootstrapCoordinator(options)
+    expect(retried).toMatchObject({ ok: true, origin: 'resumed-v1' })
+    expect(storage.records.get(PROJECT_STORAGE_KEY)).toBe(V1_SOURCE)
+    expect(projectIdFactory).not.toHaveBeenCalled()
   })
 
   it.each([
